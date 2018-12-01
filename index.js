@@ -6,7 +6,6 @@
 // <script src="http://cdnjs.cloudflare.com/ajax/libs/rxjs-dom/2.0.7/rx.dom.js"></script>
 
 import { Observable } from 'rxjs/Rx'
-import $ from 'jquery'
 
 const refreshButton = document.querySelector('.refresh')
 const closeButton1 = document.querySelector('.close1')
@@ -22,7 +21,7 @@ const requestStream = refreshClickStream.startWith('startup click')
   .map(() => 'https://api.github.com/users?since=' + Math.floor(Math.random() * 500))
 
 const responseStream = requestStream
-  .flatMap(requestUrl => Observable.fromPromise($.getJSON(requestUrl)))
+  .flatMap(requestUrl => Observable.fromPromise(window.fetch(requestUrl).then(response => response.json())))
 
 const createSuggestionStream = closeClickStream => closeClickStream.startWith('startup click')
   .combineLatest(responseStream, (click, listUsers) => listUsers[Math.floor(Math.random() * listUsers.length)])
